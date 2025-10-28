@@ -1,4 +1,4 @@
-const app = getApp();
+const app = typeof getApp === 'function' ? getApp() : null;
 Component({
   /**
    * 组件的一些选项
@@ -32,9 +32,20 @@ Component({
    * 组件的初始数据
    */
   data: {
-    StatusBar: app.globalData.StatusBar,
-    CustomBar: app.globalData.CustomBar,
-    Custom: app.globalData.Custom
+    StatusBar: app && app.globalData ? app.globalData.StatusBar : 0,
+    CustomBar: app && app.globalData ? app.globalData.CustomBar : 0,
+    Custom: app && app.globalData ? app.globalData.Custom : null
+  },
+  lifetimes: {
+    attached() {
+      if (app && app.globalData) {
+        this.setData({
+          StatusBar: app.globalData.StatusBar || 0,
+          CustomBar: app.globalData.CustomBar || 0,
+          Custom: app.globalData.Custom || null
+        });
+      }
+    }
   },
   /**
    * 组件的方法列表
